@@ -23,6 +23,15 @@ namespace PabloNobrega.Controllers
 			return View();
 		}
 
+		public IActionResult Sobre()
+		{
+			ViewData["Messagem"] = "Testando aplicação em versão mais recente";
+			ViewData["Email"] = "pablopierre@outlook.com";
+			ViewData["Autor"] = "Pablo Pierre da Nóbrega";
+
+			return View();
+		}
+
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()
 		{
