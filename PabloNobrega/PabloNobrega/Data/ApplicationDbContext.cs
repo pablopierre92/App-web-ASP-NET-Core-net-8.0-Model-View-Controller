@@ -1,0 +1,16 @@
+﻿using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol.Plugins;
+using PabloNobrega.Models;
+
+namespace PabloNobrega.Data
+{
+    public class ApplicationDbContext : DbContext
+    {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        {
+        }
+
+        public DbSet<Departamento> Departamento { get; set; }
+        
+    }
+}
