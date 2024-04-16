@@ -1,0 +1,39 @@
+﻿@{
+	ViewData["Title"] = "Cadastrar Empréstimo";
+}
+
+
+
+<div class="container p-5 rounded-5">
+
+	<div class="mb-5 text-center">
+		<h1>@ViewData["Title"]</h1>
+	</div>
+	<form>
+		<div class="mb-3">
+			<label for="Recebedor" class="form-label">Recebedor</label>
+			<input type="text" class="form-control" id="Recebedor" placeholder="Quem está revebendo o equipamento">
+			
+		</div>
+
+
+		<div class="mb-3">
+			<label for="Fornecedor" class="form-label">Fornecedor</label>
+			<input type="text" class="form-control" id="Fornecedor" placeholder="Quem está fornecendo">
+		</div>
+
+		<div class="mb-3">
+			<label for="Equipamento" class="form-label">Equipamento</label>
+			<input type="text" class="form-control" id="Equipamento" placeholder="Qual é o equipamento">
+		</div>
+
+		<div class="d-flex gap-5 mt-5">
+			<button type="submit" class="btn btn-success w-50">Adicionar</button>
+			<a class="btn btn-primary w-50" asp-controller="Emprestimos" asp-action="Index">Voltar</a>
+
+		</div>
+
+		
+
+	</form>
+</div>
