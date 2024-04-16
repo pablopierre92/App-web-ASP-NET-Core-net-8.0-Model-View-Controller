@@ -1,4 +1,6 @@
-﻿@{
+﻿@model Emprestimo
+
+@{
 	ViewData["Title"] = "Cadastrar Empréstimo";
 }
 
@@ -9,22 +11,26 @@
 	<div class="mb-5 text-center">
 		<h1>@ViewData["Title"]</h1>
 	</div>
-	<form>
+
+	<form method="post" asp-controler="Emprestimos" asp-action="Cadastrar">  <!--Envia os dados do formulário para EmprestimosController-->
+
 		<div class="mb-3">
 			<label for="Recebedor" class="form-label">Recebedor</label>
-			<input type="text" class="form-control" id="Recebedor" placeholder="Quem está revebendo o equipamento">
-			
+			<input type="text" class="form-control" asp-for="Recebedor" id="Recebedor" placeholder="Quem está revebendo o equipamento">
+			<span class="text-danger" asp-validation-for="Recebedor"></span>
 		</div>
 
 
 		<div class="mb-3">
 			<label for="Fornecedor" class="form-label">Fornecedor</label>
-			<input type="text" class="form-control" id="Fornecedor" placeholder="Quem está fornecendo">
+			<input type="text" class="form-control" asp-for="Fornecedor" id="Fornecedor" placeholder="Quem está fornecendo">
+			<span class="text-danger" asp-validation-for="Fornecedor"></span>
 		</div>
 
 		<div class="mb-3">
 			<label for="Equipamento" class="form-label">Equipamento</label>
-			<input type="text" class="form-control" id="Equipamento" placeholder="Qual é o equipamento">
+			<input type="text" class="form-control" asp-for="EquipamentoEmprestado" id="Equipamento" placeholder="Qual é o equipamento">
+			<span class="text-danger" asp-validation-for="EquipamentoEmprestado"></span>
 		</div>
 
 		<div class="d-flex gap-5 mt-5">

@@ -18,8 +18,24 @@ namespace PabloNobrega.Controllers
             return View(emprestimo);
         }
 
+        [HttpGet]
         public IActionResult Cadastrar()
         {
+            return View();
+        }
+
+        [HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult Cadastrar (Emprestimo emprestimo)
+        {
+            if(ModelState.IsValid)
+            {
+                _db.Emprestimo.Add(emprestimo);
+                _db.SaveChanges();
+
+                return RedirectToAction("Index");  //se deu tudo certo volta pra index
+            }
+
             return View();
         }
     }
