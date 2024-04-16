@@ -24,6 +24,12 @@ namespace PabloNobrega.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult Editar()
+        {
+            return View();
+        }
+
         [HttpPost]
 		[ValidateAntiForgeryToken]
 		public IActionResult Cadastrar (Emprestimo emprestimo)

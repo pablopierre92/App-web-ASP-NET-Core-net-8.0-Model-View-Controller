@@ -18,6 +18,7 @@
             <th scope="col">Fornecedor</th>
             <th scope="col">Equipamento</th>
             <th scope="col">Útima Atualização</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -29,6 +30,10 @@
                     <td>@emprestimo.Fornecedor</td>
                     <td>@emprestimo.EquipamentoEmprestado</td>
                     <td>@emprestimo.DataUltimaAtualizacao</td>
+                    <td>
+                        <a asp-controller="Emprestimos" asp-action="Editar" asp-route-id="@emprestimo.Id" class="btn btn-warning mx-2">Editar</a>
+                        <a asp-controller="Emprestimos" asp-action="Excluir" asp-route-id="@emprestimo.Id" class="btn btn-danger mx-2">Excluir</a>
+                    </td>
                 </tr>
             }
         
