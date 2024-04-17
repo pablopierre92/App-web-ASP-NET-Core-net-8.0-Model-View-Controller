@@ -7,7 +7,7 @@ $(document).ready(function () {
         {
             "decimal": "",
             "emptyTable": "No data available in table",
-            "info": "Mostrando _START_ registro de _END_ em um total de _TOTAL_ entries",
+            "info": "Mostrando _START_ registro de _END_ em um total de _TOTAL_ entradas",
             "infoEmpty": "Showing 0 to 0 of 0 entries",
             "infoFiltered": "(filtered from _MAX_ total entradas)",
             "infoPostFix": "",
