@@ -25,9 +25,43 @@ namespace PabloNobrega.Controllers
         }
 
         [HttpGet]
-        public IActionResult Editar()
+        public IActionResult Editar(int? id)
         {
-            return View();
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+
+            Emprestimo emprestimo = _db.Emprestimo.FirstOrDefault(x => x.Id == id);
+
+            if (emprestimo == null)
+            {
+                return NotFound();
+            }
+
+
+            return View(emprestimo);
+            
+        }
+
+        [HttpGet]
+        public IActionResult Excluir(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+
+            Emprestimo emprestimo = _db.Emprestimo.FirstOrDefault(x => x.Id == id);
+
+            if (emprestimo == null)
+            {
+                return NotFound();
+            }
+
+
+            return View(emprestimo);
+
         }
 
         [HttpPost]
@@ -44,5 +78,36 @@ namespace PabloNobrega.Controllers
 
             return View();
         }
-    }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Editar(Emprestimo emprestimo)
+        {
+            if (ModelState.IsValid)
+            {
+                _db.Emprestimo.Update(emprestimo);
+                _db.SaveChanges();
+
+                return RedirectToAction("Index");  
+            }
+
+            return View(emprestimo);
+        }
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult Excluir(Emprestimo emprestimo)
+		{
+			if (emprestimo == null)
+			{
+                return NotFound();
+			}
+
+            _db.Emprestimo.Remove(emprestimo);
+            _db.SaveChanges();
+
+            return RedirectToAction("Index");
+		}
+	}
 }
