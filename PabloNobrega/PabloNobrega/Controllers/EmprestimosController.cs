@@ -73,6 +73,8 @@ namespace PabloNobrega.Controllers
                 _db.Emprestimo.Add(emprestimo);
                 _db.SaveChanges();
 
+                TempData["MensagemSucesso"] = "Cadastro realizado com sucesso";
+
                 return RedirectToAction("Index");  //se deu tudo certo volta pra index
             }
 
@@ -89,8 +91,12 @@ namespace PabloNobrega.Controllers
                 _db.Emprestimo.Update(emprestimo);
                 _db.SaveChanges();
 
+                TempData["MensagemSucesso"] = "Edição realizada com sucesso";
+
                 return RedirectToAction("Index");  
             }
+
+            TempData["MensagemErro"] = "Algum erro ocorreu ao realizar edição";
 
             return View(emprestimo);
         }
@@ -106,6 +112,8 @@ namespace PabloNobrega.Controllers
 
             _db.Emprestimo.Remove(emprestimo);
             _db.SaveChanges();
+
+            TempData["MensagemSucesso"] = "Exclusão realizada com sucesso";
 
             return RedirectToAction("Index");
 		}
