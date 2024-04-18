@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 
 namespace PabloNobrega.Models
@@ -11,7 +12,9 @@ namespace PabloNobrega.Models
 
         public string Email { get; set; }
 
-        public DateTime DataNascimento { get; set; }
+		[DataType(DataType.Date)]
+		[DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+		public DateTime DataNascimento { get; set; }
 
         public double Salario { get; set; }
 
@@ -30,21 +33,24 @@ namespace PabloNobrega.Models
             Salario = salario;
             Departamento = departamento;
         }
-/*
-        public void AddVendas(RegistroVendas rv)
-        {
-            Vendas.Add(rv);
-        }
 
-        public void RemoveVendas(RegistroVendas rv) {
-            Vendas.Remove(rv);
-        }
+		public ICollection<Departamento> Departamentos { get; set; }
+	}
+	/*
+			public void AddVendas(RegistroVendas rv)
+			{
+				Vendas.Add(rv);
+			}
 
-        public double TotalVendas(DateTime inicial, DateTime final)
-        {
-            return Vendas.Where(rv => rv.Date >= inicial && rv.Date <= final).Sum(rv => rv.Amount);
-        }
+			public void RemoveVendas(RegistroVendas rv) {
+				Vendas.Remove(rv);
+			}
 
-        */
-    }
+			public double TotalVendas(DateTime inicial, DateTime final)
+			{
+				return Vendas.Where(rv => rv.Date >= inicial && rv.Date <= final).Sum(rv => rv.Amount);
+			}
+
+			*/
 }
+

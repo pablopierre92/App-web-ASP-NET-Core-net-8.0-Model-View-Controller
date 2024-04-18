@@ -13,5 +13,7 @@ namespace PabloNobrega.Data
         public DbSet<Departamento> Departamento { get; set; }
         
         public DbSet<Emprestimo> Emprestimo { get; set; }
+
+        public DbSet<Vendedor> Vendedor { get; set; }
     }
 }
