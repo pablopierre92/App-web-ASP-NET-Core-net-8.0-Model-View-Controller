@@ -71,8 +71,19 @@ namespace PabloNobrega.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Cadastrar(Departamento departamento)
         {
+            
             if (ModelState.IsValid)
             {
+
+                // Verifica se já existe um departamento com o mesmo nome
+                var departamentoExistente = _db.Departamento.FirstOrDefault(x => x.Nome == departamento.Nome);
+
+                if (departamentoExistente != null)
+                {
+                    ModelState.AddModelError("Nome", "Já existe um departamento com esse nome.");
+                    return View(departamento); // Retorna para a view com o departamento e uma mensagem de erro
+                }
+
                 _db.Departamento.Add(departamento);
                 _db.SaveChanges();
 
@@ -91,6 +102,16 @@ namespace PabloNobrega.Controllers
         {
             if (ModelState.IsValid)
             {
+
+                // Verifica se já existe um departamento com o mesmo nome
+                var departamentoExistente = _db.Departamento.FirstOrDefault(x => x.Nome == departamento.Nome);
+
+                if (departamentoExistente != null)
+                {
+                    ModelState.AddModelError("Nome", "Já existe um departamento com esse nome.");
+                    return View(departamento); // Retorna para a view com o departamento e uma mensagem de erro
+                }
+
                 _db.Departamento.Update(departamento);
                 _db.SaveChanges();
 
