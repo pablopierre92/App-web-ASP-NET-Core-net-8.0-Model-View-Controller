@@ -1,4 +1,5 @@
-﻿using PabloNobrega.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using PabloNobrega.Data;
 using PabloNobrega.Models;
 
 namespace PabloNobrega.Services
@@ -12,9 +13,9 @@ namespace PabloNobrega.Services
 			_db = db;
 		}
 
-		public List<Departamento> FindAll()
+		public async Task <List<Departamento>> FindAllAsync()
 		{
-			return _db.Departamento.OrderBy(x=>x.Nome).ToList();
+			return await _db.Departamento.OrderBy(x=>x.Nome).ToListAsync();
 		}
 	}
 }

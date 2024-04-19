@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PabloNobrega.Data;
+using PabloNobrega.Models;
+using PabloNobrega.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddMvc();
+builder.Services.AddScoped<VendedorService>();
+builder.Services.AddScoped<DepartamentoService>();
 
 var app = builder.Build();
 

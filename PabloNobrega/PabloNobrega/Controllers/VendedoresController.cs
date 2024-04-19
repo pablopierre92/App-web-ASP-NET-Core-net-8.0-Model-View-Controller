@@ -1,146 +1,166 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol.Plugins;
 using PabloNobrega.Data;
 using PabloNobrega.Migrations;
 using PabloNobrega.Models;
+using PabloNobrega.Models.ViewModels;
+using PabloNobrega.Services;
+using PabloNobrega.Services.Exceptions;
+using System.Runtime.InteropServices;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+
 
 namespace PabloNobrega.Controllers
 {
-    public class VendedoresController : Controller
-    {
-        private readonly ApplicationDbContext _db;
+	public class VendedoresController : Controller
+	{
+		private readonly VendedorService _vendedorService;
+		private readonly DepartamentoService _departamentoService;
+		
 
-        public VendedoresController(ApplicationDbContext db)
-        {
-            _db = db;
-        }
-        
+		public VendedoresController(VendedorService vendedorService, DepartamentoService departamentoService)
+		{
+			_vendedorService = vendedorService;
+			_departamentoService = departamentoService;
+			
+		}
 
-        public IActionResult Index()
-        {
-            IEnumerable<Vendedor> vendedor = _db.Vendedor;
-            return View(vendedor);
-        }
+		/*private readonly ApplicationDbContext _db;
+		
+		public VendedoresController(ApplicationDbContext db)
+		{
+			_db = db;
+		}
 
-        [HttpGet]
-        public IActionResult Cadastrar()
-        {
-            return View();
-        }
+		public IActionResult Index()
+		{
+			IEnumerable<Vendedor> vendedor = _db.Vendedor;
+			return View(vendedor);
+		}*/
 
-        [HttpGet]
-        public IActionResult Editar(int? id)
-        {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
+		public async Task<IActionResult> Index()
+		{
+			var list = await _vendedorService.FindAllAsync();
+			return View(list);
 
-            Vendedor vendedor = _db.Vendedor.FirstOrDefault(x => x.Id == id);
+			
+		}
 
-            if (vendedor == null)
-            {
-                return NotFound();
-            }
+		[HttpGet]
+		public async Task<IActionResult> Cadastrar()
+		{
+			var departamentos = await _departamentoService.FindAllAsync(); // busca no banco todos os departamentos
+			var viewModel = new VendedorFormViewModel { Departamentos = departamentos };
+			return View(viewModel);
+		}
 
+		[HttpGet]
+		public async Task <IActionResult> Editar(int? id)
+		{
+			if (id == null || id == 0)
+			{
+				return RedirectToAction(nameof(Error), new { message = "Id não fornecido" });
+			}
 
-            return View(vendedor);
+			var obj = await _vendedorService.FindByIdAsync(id.Value);
 
-        }
+			if (obj == null)
+			{
+				return RedirectToAction(nameof(Error), new { message = "Id não encontrado" });
+			}
 
-        [HttpGet]
-        public IActionResult Excluir(int? id)
-        {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
+			List<Departamento> departamentos = await _departamentoService.FindAllAsync();
+			VendedorFormViewModel viewModel = new VendedorFormViewModel { Vendedor = obj, Departamentos = departamentos };
+			return View(viewModel);
 
-            Vendedor vendedor = _db.Vendedor.FirstOrDefault(x => x.Id == id);
+		}
 
-            if (vendedor == null)
-            {
-                return NotFound();
-            }
+		[HttpGet]
+		public async Task<IActionResult> Excluir(int? id)
+		{
+			if (id == null || id == 0)
+			{
+				return RedirectToAction(nameof(Error), new { message = "Id não foi fornecido" });
+			}
 
+			var obj = await _vendedorService.FindByIdAsync (id.Value);
 
-            return View(vendedor);
-
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Cadastrar(Vendedor vendedor)
-        {
-
-            if (ModelState.IsValid)
-            {
-
-                // Verifica se já existe um vendedor com o mesmo nome
-                var vendedorExistente = _db.Vendedor.FirstOrDefault(x => x.Nome == vendedor.Nome);
-
-                if (vendedorExistente != null)
-                {
-                    ModelState.AddModelError("Nome", "Já existe um Vendedor com esse nome.");
-                    return View(vendedor); // Retorna para a view com o vendedor e uma mensagem de erro
-                }
-
-                _db.Vendedor.Add(vendedor);
-                _db.SaveChanges();
-
-                TempData["MensagemSucesso"] = "Cadastro realizado com sucesso";
-
-                return RedirectToAction("Index");  //se deu tudo certo volta pra index
-            }
-
-            return View();
-        }
+			if (obj == null)
+			{
+				return RedirectToAction(nameof(Error), new { message = "Id não foi encontrado" });
+			}
 
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Editar(Vendedor vendedor)
-        {
-            if (ModelState.IsValid)
-            {
+			return View(obj);
 
-                // Verifica se já existe um vendedor com o mesmo nome
-                var vendedorExistente = _db.Departamento.FirstOrDefault(x => x.Nome == vendedor.Nome);
+		}
 
-                if (vendedorExistente != null)
-                {
-                    ModelState.AddModelError("Nome", "Já existe um departamento com esse nome.");
-                    return View(vendedor); // Retorna para a view com o vendedor e uma mensagem de erro
-                }
+		[HttpPost]
+		[ValidateAntiForgeryToken] //proteção
+		public async Task<IActionResult> Cadastrar(Vendedor vendedor)
+		{
 
-                _db.Vendedor.Update(vendedor);
-                _db.SaveChanges();
+			if (!ModelState.IsValid)
+			{
 
-                TempData["MensagemSucesso"] = "Edição realizada com sucesso";
+				var departamentos = await _departamentoService.FindAllAsync();
+				var viewModel = new VendedorFormViewModel { Vendedor = vendedor, Departamentos = departamentos };
+				return View(viewModel);
+												
+			}
+			await _vendedorService.InsertAsync(vendedor);
+				return RedirectToAction(nameof(Index), TempData["MensagemSucesso"] = "Cadastro realizado com sucesso" );
+			//
 
-                return RedirectToAction("Index");
-            }
+			
+		}
 
-            TempData["MensagemErro"] = "Algum erro ocorreu ao realizar edição";
 
-            return View(vendedor);
-        }
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Editar(int id, Vendedor vendedor)
+		{
+			if (!ModelState.IsValid)
+			{
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Excluir(Vendedor vendedor)
-        {
-            if (vendedor == null)
-            {
-                return NotFound();
-            }
+				var departamentos = await _departamentoService.FindAllAsync();
+				var viewModel = new VendedorFormViewModel {  Vendedor = vendedor, Departamentos = departamentos };
+				return View(viewModel);
 
-            _db.Vendedor.Remove(vendedor);
-            _db.SaveChanges();
+			}
 
-            TempData["MensagemSucesso"] = "Exclusão realizada com sucesso";
+			if (id != vendedor.Id)
+			{
+				return RedirectToAction(nameof(Error), new { message = "Id incompatível" });
+			}
+			try
+			{
+				await _vendedorService.UpdateAsync(vendedor);
+				return RedirectToAction(nameof(Index), TempData["MensagemSucesso"] = "Edição realizada com sucesso");
+			}
+			catch (ApplicationException e)
+			{
+				return RedirectToAction(nameof(Error), new { message = e.Message });
+			}
 
-            return RedirectToAction("Index");
-        }
-    }
+			
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task <IActionResult> Excluir(int id)
+		{
+			try
+			{
+				await _vendedorService.RemoveAsync(id);
+				return RedirectToAction(nameof(Index), TempData["MensagemSucesso"] = "Remoção realizada com sucesso" );
+			}
+			catch (IntegrityException e)
+			{
+				return RedirectToAction(nameof(Error), new { message = e.Message });
+			}
+		}
+	}
 }
-  
+

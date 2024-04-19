@@ -12,6 +12,8 @@ namespace PabloNobrega.Models
 
         public string Email { get; set; }
 
+		[Required(ErrorMessage = "{0} required")]
+		[Display(Name = "DataNascimento")]
 		[DataType(DataType.Date)]
 		[DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
 		public DateTime DataNascimento { get; set; }
@@ -34,7 +36,7 @@ namespace PabloNobrega.Models
             Departamento = departamento;
         }
 
-		public ICollection<Departamento> Departamentos { get; set; }
+		//public ICollection<Departamento> Departamentos { get; set; }
 	}
 	/*
 			public void AddVendas(RegistroVendas rv)
